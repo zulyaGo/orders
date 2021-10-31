@@ -1,0 +1,64 @@
+
+.cont {
+    min-width: 1300px !important;
+    max-width: 100%;
+	margin: 15px;    
+}
+
+ul li {
+    list-style:none;
+    float: left;
+    margin-right: 10px;
+    font-size: 18px;
+    text-align: center;    
+}
+
+.clear {
+    clear: both;
+}
+
+.maincontent h2, #new_order h4 {
+    text-align: center;
+}
+
+.btn {
+    padding: 3px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    float: right;
+}
+
+.btn a {
+    text-decoration: none;
+}
+
+.table {
+    
+}
+
+#new_order {
+    min-width: 250px;
+    max-width:300px;
+    left: 50%;
+    top: 50%;
+    margin-left: -125px;
+    margin-top: -100px;
+    border: 1px solid #A9A9A9;
+    padding:10px;
+    background-color: #FFFAFA;
+    position: absolute;
+    z-index: 10;
+}
+
+button {
+    cursor: pointer;
+}
+
+a.red_btn {
+    color:#B22222;
+}
+
+.form-group input, .form-group select{
+    border-radius: 4px;    
+    width: 90%;
+}

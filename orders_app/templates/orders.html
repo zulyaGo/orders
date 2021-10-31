@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="clear"></div>
+    <h2>Управление заказами </h2>
+	<p class="btn"><a href=""  onclick="javascript:event.preventDefault();return add_order()"  class="">+ Добавить заказ</a></p>
+	<div class="clear"></div>
+
+
+  <div class="content">
+ 
+  
+  <p>Количество заказов: {{orders.count}}</p>
+  <p><a href="{% url 'orders_app:export_data'%}" target="_blank">Экспорт</a><p>
+    <table border="1" width="100%" id="order_table">
+
+        <col width="10%" /> <!-- Название -->
+        <col width="10%" /> <!-- Название -->
+        <col width="10%" /> <!-- Название -->
+        <col width="2%" /> <!-- № -->        
+      <thead>
+        <tr>
+          
+		  <th>Заказчик</th>
+		  <th>Дата</th>
+          <th>Сумма </th>
+          <th></th>
+
+		 
+        </tr>
+      </thead>
+      <tbody>
+		{% for i in orders %}	
+        <tr id='row{{i.id}}' class="">
+      
+		  <td align='left' id="user{{i.id}}">{{i.user.get_full_name}}</td>
+          <td align='left' id="date{{i.id}}">{{i.date|date:'d.m.Y'}}</td>
+          <td align='left' id="summ{{i.id}}">{{i.summ}}</td>
+          <td><a class="red_btn" href="" onclick="javascript:event.preventDefault();delete_order({{i.id}});">Удалить</a></td>
+		</tr>
+		{% empty %}
+		<tr>
+		  <td align='center' colspan="8">Текущих заказов не найдено</td>
+		</tr>
+		{% endfor %}
+      </tbody>
+    </div>
+
+
+
+
+	<div id="new_order" style="display:none">
+       <p style="text-align:right"><button type="button" onclick="javascript:close_order()" ><span>x</span></button></p>
+		<h4>Добавить нового поставщика</h4>
+		
+		  <div class="dialog-body">
+			<form action='' method='post' id="new_post_form" enctype="multipart/form-data" autocomplete="off">{% csrf_token %}        
+			  <div class="form-group">
+				{{form.as_p}}			
+			  </div>
+			   <button type="submit" class="btn" onclick="javascript:event.preventDefault();return new_order_sbm()">Добавить</button>
+               <div class="clear"></div>
+			</form>
+		  </div>
+		</div>
+        
+    <script>    
+        function new_order_sbm() {
+        var data = $('form').serialize(); 
+		$.ajax
+			({
+				type : "POST",
+				cache: false,
+				url: "/orders/new_order/",
+				dataType: "json",
+                data : data,
+				success: function(json)
+				{
+					console.log("success");
+                    var table = document.getElementById("order_table");
+                    var new_row = table.insertRow();
+                    var new_cell  = new_row.insertCell(0);
+                    var new_text  = document.createTextNode(json.user);
+                    new_cell.appendChild(new_text);
+                    var new_cell  = new_row.insertCell(1);
+                    var new_text  = document.createTextNode(json.date);
+                    new_cell.appendChild(new_text);
+                    var new_cell  = new_row.insertCell(2);
+                    var new_text  = document.createTextNode(json.summ);
+                    new_cell.appendChild(new_text);
+                    document.getElementById('new_post_form').reset();
+                    var order_window = document.querySelector('#new_order');
+                    order_window.style.display = 'none';
+                    }
+					
+				
+			});		
+	};
+    </script>
+	
+<script>
+function add_order() {
+    
+	var order_window = document.querySelector('#new_order');
+    order_window.style.display = 'block';
+}
+
+function close_order() {
+    
+	var order_window = document.querySelector('#new_order');
+    order_window.style.display = 'none';
+}
+
+function delete_order(id){
+	event.preventDefault();
+	$el = $('#row'+id);
+    $el.load("/orders/"+id+"/delete/");
+    $el.remove();
+};
+
+
+            
+</script>
+{% endblock %}
+
+
+    
+

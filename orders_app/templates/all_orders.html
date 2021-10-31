@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load templatetags %}
+{% block content %}
+    <div class="clear"></div>
+    <h2>История заказов </h2>
+	<div class="clear"></div>
+
+
+  <div class="content">
+ 
+  
+  <p>Количество заказов: {{orders.count}}</p>
+  <p>Выбрать неделю: 
+  <form name="week_form">
+  <select name="chosen_week" onchange="document.week_form.submit()">
+      {% for w in weeks %}
+      <option value="{{forloop.counter0}}" {% if chosen_week == forloop.counter0 %}selected{% endif %}>{{w|cut:'['|cut:']'}}</option>
+      {% endfor %}
+  </select>
+  </form>
+  </p>
+    <table border="1" width="100%" id="order_table">
+
+        <col width="10%" /> <!-- Название -->
+        <col width="10%" /> <!-- Название -->
+        <col width="10%" /> <!-- Название -->
+     
+      <thead>
+        <tr>
+          
+		  
+		  <th>Дата</th>
+          <th>Заказчики</th>
+          <th>Общая сумма заказов за день </th>
+
+        </tr>
+      </thead>
+      <tbody>
+		{% regroup orders by date|date:"d.m.Y" as date_list %}
+        {% for a in date_list %}
+        <tr id='row{{i.id}}' class="">
+      
+		  <td align='left'><b>{{ a.grouper }}</b></td>
+          <td align='left'>{% for u in a.grouper|get_all_users %}{{u.get_full_name}}{% endfor %}</td>
+          <td align='left'>{% with a.grouper|get_summ as summ %}{{summ.orders_summ}}{% endwith %}</td>
+         
+		</tr>
+        {% empty %}
+        <tr align="center" valign="middle">
+			
+				<td colspan="10">
+					История заказов пуста
+				</td>
+			</tr>
+		{% endfor %}
+      </tbody>
+    </table>
+     
+      
+        <p><b>Общая сумма: {{itog.orders_summ|default_if_none:'0'}}</b></p>
+        <p><b>Заказчики за неделю: {% for i in users %}{{i.get_full_name}} {% endfor %}</b></p>
+    </div>
+    
+    <script>
+    chosen_week
+    
+    
+    </script>
+
+
+
+
+	
+{% endblock %}
+
+
+    
+
